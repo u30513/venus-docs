@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Venus Docs — The smartest trading bot for Solana tokens</title>
+<meta name="description" content="Venus is the smartest trading bot for Solana tokens. Buy and sell in one tap, or let Smart Trade manage your positions with automated take-profits and a dynamic stop-loss.">
+<meta property="og:title" content="Venus — The smartest trading bot for Solana tokens">
+<meta property="og:description" content="Buy and sell in one tap, or let Smart Trade manage your positions: automated take-profits, a stop-loss that climbs as you gain, and a trailing stop.">
+<meta property="og:url" content="https://venustradingbot.com">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='0.9em'%20font-size='85'%20fill='%233178B5'%3E%E2%97%88%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #F4F6F8;
+    --surface: #FFFFFF;
+    --surface-2: #ECEFF3;
+    --ink: #1C2430;
+    --ink-soft: #4A5568;
+    --ink-faint: #7A8699;
+    --accent: #3178B5;
+    --accent-soft: #E1EEF9;
+    --line: #DCE1E8;
+    --buy: #1E7F4F;
+    --sell: #B03A3A;
+    --warn-bg: #FBF3E4;
+    --warn-line: #E3C98A;
+    --code-bg: #EDF0F4;
+  }
+  :root:not([data-theme="light"]) { }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #131A24;
+      --surface: #1B2431;
+      --surface-2: #222D3C;
+      --ink: #E8ECF1;
+      --ink-soft: #B3BDCA;
+      --ink-faint: #8291A5;
+      --accent: #7FB8E8;
+      --accent-soft: #1C2A3A;
+      --line: #2C3949;
+      --buy: #4CC38A;
+      --sell: #E57878;
+      --warn-bg: #2A2416;
+      --warn-line: #6B5A2E;
+      --code-bg: #232E3D;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #131A24;
+    --surface: #1B2431;
+    --surface-2: #222D3C;
+    --ink: #E8ECF1;
+    --ink-soft: #B3BDCA;
+    --ink-faint: #8291A5;
+    --accent: #7FB8E8;
+    --accent-soft: #1C2A3A;
+    --line: #2C3949;
+    --buy: #4CC38A;
+    --sell: #E57878;
+    --warn-bg: #2A2416;
+    --warn-line: #6B5A2E;
+    --code-bg: #232E3D;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .serif { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
+  code, .mono {
+    font-family: ui-monospace, "Cascadia Code", Consolas, Menlo, monospace;
+    font-size: 0.92em;
+    background: var(--code-bg);
+    border-radius: 4px;
+    padding: 0.08em 0.35em;
+  }
+
+  header.top {
+    position: sticky; top: 0; z-index: 30;
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 20px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+  .wordmark { display: flex; align-items: baseline; gap: 8px; }
+  .wordmark .mark { color: var(--accent); font-size: 1.15rem; }
+  .wordmark .name { font-weight: 700; letter-spacing: 0.01em; }
+  .wordmark .docs { color: var(--ink-faint); }
+  .draft-badge {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.09em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 999px; padding: 2px 10px;
+  }
+  header.top .official { margin-left: auto; font-size: 0.8rem; color: var(--ink-faint); }
+  header.top .official code { background: var(--accent-soft); color: var(--accent); }
+
+  .shell { display: flex; max-width: 1120px; margin: 0 auto; }
+  nav.side {
+    width: 248px; flex: none;
+    position: sticky; top: 49px;
+    align-self: flex-start;
+    max-height: calc(100vh - 49px);
+    overflow-y: auto;
+    padding: 24px 8px 40px 16px;
+  }
+  nav.side .group {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-faint);
+    margin: 20px 8px 6px;
+  }
+  nav.side .group:first-child { margin-top: 0; }
+  nav.side a {
+    display: block; padding: 5px 10px; border-radius: 6px;
+    color: var(--ink-soft); text-decoration: none; font-size: 0.9rem;
+  }
+  nav.side a:hover { background: var(--surface-2); color: var(--ink); }
+  nav.side a:focus-visible, a:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+
+  main {
+    flex: 1; min-width: 0;
+    padding: 36px 32px 80px;
+    border-left: 1px solid var(--line);
+    background: var(--bg);
+  }
+  main > section { max-width: 45rem; }
+  h1 { font-size: 2.1rem; line-height: 1.2; margin: 0 0 6px; text-wrap: balance; }
+  .lede { color: var(--ink-soft); font-size: 1.06rem; margin: 0 0 26px; }
+  h2 {
+    font-size: 1.45rem; margin: 46px 0 10px; padding-top: 26px;
+    border-top: 1px solid var(--line); text-wrap: balance;
+  }
+  h3 { font-size: 1.05rem; margin: 26px 0 6px; }
+  p { margin: 10px 0; }
+  ul, ol { margin: 10px 0; padding-left: 22px; }
+  li { margin: 5px 0; }
+  a { color: var(--accent); }
+
+  .cta {
+    display: inline-block;
+    background: var(--accent); color: var(--bg);
+    font-weight: 700; text-decoration: none;
+    padding: 10px 22px; border-radius: 8px;
+    margin: 2px 0 10px;
+  }
+  .cta:hover { filter: brightness(1.08); }
+
+  .callout {
+    display: flex; gap: 10px;
+    background: var(--warn-bg);
+    border: 1px solid var(--warn-line);
+    border-radius: 8px;
+    padding: 12px 14px; margin: 14px 0;
+    font-size: 0.93rem;
+  }
+  .callout.info { background: var(--surface); border-color: var(--line); }
+  .callout .ic { flex: none; }
+
+  .steps { counter-reset: step; list-style: none; padding: 0; margin: 14px 0; display: grid; gap: 10px; }
+  .steps li {
+    counter-increment: step;
+    display: flex; gap: 14px; align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px; padding: 14px 16px; margin: 0;
+  }
+  .steps li::before {
+    content: counter(step);
+    flex: none;
+    width: 26px; height: 26px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--accent); color: var(--surface);
+    font-weight: 700; font-size: 0.85rem;
+  }
+  .steps b { display: block; }
+  .steps span { color: var(--ink-soft); font-size: 0.93rem; }
+
+  .table-wrap { overflow-x: auto; margin: 14px 0; border: 1px solid var(--line); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; min-width: 560px; background: var(--surface); font-size: 0.92rem; }
+  th, td { padding: 9px 13px; text-align: left; border-bottom: 1px solid var(--line); }
+  th { background: var(--surface-2); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
+  tr:last-child td { border-bottom: none; }
+  td { font-variant-numeric: tabular-nums; }
+  td.strat { font-weight: 700; white-space: nowrap; }
+
+  .chat {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px; margin: 14px 0;
+    font-size: 0.9rem; line-height: 1.75;
+    max-width: 26rem;
+  }
+  .chat .from { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  .chip { border-radius: 4px; padding: 0.05em 0.3em; font-weight: 600; font-size: 0.9em; }
+  .chip.buy { color: var(--buy); background: color-mix(in srgb, var(--buy) 12%, transparent); }
+  .chip.sell { color: var(--sell); background: color-mix(in srgb, var(--sell) 12%, transparent); }
+
+  .qa { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); margin: 10px 0; }
+  .qa summary { cursor: pointer; padding: 12px 16px; font-weight: 600; }
+  .qa div { padding: 0 16px 12px; color: var(--ink-soft); font-size: 0.95rem; }
+
+  footer.bottom {
+    border-top: 1px solid var(--line);
+    margin-top: 56px; padding-top: 18px;
+    color: var(--ink-faint); font-size: 0.85rem; max-width: 45rem;
+  }
+
+  @media (max-width: 820px) {
+    .shell { flex-direction: column; }
+    nav.side { position: static; width: auto; max-height: none; display: flex; flex-wrap: wrap; gap: 2px 6px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+    nav.side .group { flex-basis: 100%; margin: 8px 4px 2px; }
+    main { border-left: none; padding: 24px 18px 60px; }
+    header.top .official { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wordmark serif"><span class="mark">◈</span><span class="name">Venus</span><span class="docs">Docs</span></div>
+  <span class="official">Only official bot: <a href="https://t.me/venus_smart_tradingbot"><code>@venus_smart_tradingbot</code></a></span>
+</header>
+
+<div class="shell">
+<nav class="side" aria-label="Documentation">
+  <div class="group">Start here</div>
+  <a href="#welcome">What is Venus</a>
+  <a href="#getting-started">Getting started</a>
+  <div class="group">Trading</div>
+  <a href="#buy-sell">Buying &amp; selling</a>
+  <a href="#discover">Finding tokens</a>
+  <a href="#smart-trade">Smart Trade</a>
+  <a href="#strategies">Strategies</a>
+  <a href="#history">History &amp; Positions</a>
+  <div class="group">Your account</div>
+  <a href="#fees">Fees</a>
+  <a href="#referrals">Referrals</a>
+  <a href="#wallet">Wallet &amp; security</a>
+  <div class="group">Help</div>
+  <a href="#faq">FAQ</a>
+</nav>
+
+<main>
+<section id="welcome">
+  <h1 class="serif"><span style="color: var(--accent)">Venus:</span> The smartest trading bot for Solana tokens</h1>
+  <p class="lede">Buy and sell in one tap ⚡ — or let 🧠 <b>Smart Trade</b> do the thinking: it takes profits in stages, guards you with a stop-loss that climbs as you gain, and rides the trend with a trailing stop, messaging you at every move.</p>
+  <a class="cta" href="https://t.me/venus_smart_tradingbot">Open Venus on Telegram ⚡</a>
+
+  <h3>Why people use it</h3>
+  <ul>
+    <li><b>Speed</b> — paste a token address, tap once, done.</li>
+    <li><b>Smart Trade</b> — automated take-profits, a stop-loss that locks in gains, and a trailing stop. You choose the token and the strategy; Venus executes it day and night.</li>
+    <li><b>Transparency</b> — every action produces a receipt with a link to the blockchain, every risk is stated on screen, and your keys are exportable at any time.</li>
+  </ul>
+</section>
+
+<section id="getting-started">
+  <h2 class="serif">Getting started</h2>
+  <ol class="steps">
+    <li><div><b>Create your wallet</b><span>Open <a href="https://t.me/venus_smart_tradingbot">@venus_smart_tradingbot</a> and tap <code>Create my wallet</code>. It takes a second — the wallet is yours, its private key is stored encrypted, and you can export it whenever you want.</span></div></li>
+    <li><div><b>Fund it</b><span>Send SOL to your wallet address from any exchange or wallet. It appears in Balance within seconds.</span></div></li>
+    <li><div><b>Trade — two ways</b><span><b>Do it yourself:</b> paste any token address and buy with one tap. <b>Or let Venus trade for you:</b> pick a strategy and start a Smart Trade.</span></div></li>
+  </ol>
+</section>
+
+<section id="buy-sell">
+  <h2 class="serif">Buying &amp; selling</h2>
+  <h3>Buy</h3>
+  <p>Paste a token address anywhere in the chat and Venus opens a <b>token card</b>: live price, market size, liquidity, and warnings if something looks dangerous. Tap an amount (<code>0.1</code>, <code>0.5</code>, <code>1</code> SOL or a custom one) and the swap executes.</p>
+  <h3>Sell</h3>
+  <p>Tap <span class="chip sell">Sell</span>, pick the token, choose <code>25%</code> / <code>50%</code> / <code>75%</code> / <code>100%</code> or a custom share. Venus asks you to confirm, then sends the swap.</p>
+  <h3>Your receipt</h3>
+  <p>Every trade returns a receipt: what moved, what you received, and a <b>View on Solscan</b> link so you can verify it on the public blockchain. Sell receipts also show the <b>minimum guaranteed</b> — the least the swap was allowed to deliver under your slippage setting; if the price had moved further than that, the trade would have failed rather than sell cheaper.</p>
+</section>
+
+<section id="discover">
+  <h2 class="serif">Finding tokens</h2>
+  <p>The 🔥 <b>Trending</b> section has three views:</p>
+  <ul>
+    <li><b>🔥 Trending</b> — the tokens the most real people are trading right now. Ranked by genuine buyers and sellers, with fake volume filtered out.</li>
+    <li><b>🚀 Top gainers</b> — what climbed the most in the last 24 hours, only among tokens with real liquidity, so there is always a market to exit into.</li>
+    <li><b>🔍 Search</b> — type a name or ticker like <code>WIF</code> and Venus finds it on Solana. Verified tokens with deep liquidity appear first, so name-copycats are easy to spot.</li>
+  </ul>
+  <p>Every result opens the same token card — with the same data and the same warnings — before any money moves.</p>
+</section>
+
+<section id="smart-trade">
+  <h2 class="serif">Smart Trade</h2>
+  <p>A Smart Trade is a position that manages itself: <b>you choose the token and the strategy, Venus executes it</b>. It buys, then watches the market around the clock:</p>
+  <ul>
+    <li><b>Take-profits</b> — sells a slice at each target, so gains become real SOL in your wallet.</li>
+    <li><b>Dynamic stop-loss</b> — starts below your entry and <i>moves up</i> every time a take-profit hits. After the first target, the trade can no longer lose money.</li>
+    <li><b>Trailing stop</b> — after the last target, the rest rides the trend and sells only when the price falls back a set distance from its highest point.</li>
+  </ul>
+  <p>Your live position always shows the full strategy and your money, clearly separated into what is already <b>collected</b> (safe in your wallet) and what is still <b>in the trade</b>:</p>
+  <div class="chat">
+    <div class="from">Venus · Live position</div>
+    <b>Strategy · ⚖️ Standard</b><br>
+    ✅ TP1 +20% — done, sold 25% for ≈ 0.35 SOL<br>
+    ▶️ <b>TP2 +45%</b> — next, sells 25%<br>
+    · TP3 +80% — sells 20%<br>
+    · Trailing stop — after TP3<br>
+    🛡 Stop-loss (+1%) — sells everything if hit<br>
+    <span style="color: var(--ink-faint)">Net so far: 📈 +0.21 SOL (+21%)</span>
+  </div>
+  <div class="callout info"><span class="ic">🧠</span><div><b>Two rules to know.</b> One Smart Trade runs at a time. And it manages your <b>entire balance</b> of that token — anything you bought normally is managed by the strategy too.</div></div>
+  <p>You stay in control: <b>Stop</b> pauses the automation (nothing is sold), <b>Force Sell Now</b> exits the whole position immediately, and when the trade ends — win or lose — you get a full closing summary: entry and exit prices, every take-profit, the net result, and your wallet balance after the sale.</p>
+</section>
+
+<section id="strategies">
+  <h2 class="serif">Strategies</h2>
+  <p>A strategy is just four numbers: where the safety net starts, and the three profit targets. Pick one in the Trade Center — every Smart Trade uses your choice.</p>
+  <div class="table-wrap"><table>
+    <tr><th>Strategy</th><th>Stop-loss</th><th>Target 1</th><th>Target 2</th><th>Target 3</th><th>Trailing</th></tr>
+    <tr><td class="strat">🛡️ Conservative</td><td>−8%</td><td>+12% · sell 40%</td><td>+25% · sell 30%</td><td>+40% · sell 20%</td><td>10% below peak</td></tr>
+    <tr><td class="strat">⚖️ Standard</td><td>−12%</td><td>+20% · sell 25%</td><td>+45% · sell 25%</td><td>+80% · sell 20%</td><td>18% below peak</td></tr>
+    <tr><td class="strat">🚀 Degen</td><td>−25%</td><td>+50% · sell 20%</td><td>+120% · sell 20%</td><td>+250% · sell 20%</td><td>30% below peak</td></tr>
+    <tr><td class="strat">🎛 Custom</td><td colspan="5">Set your own stop-loss, targets and trailing distance.</td></tr>
+  </table></div>
+  <p>The stop-loss is dynamic in every strategy: each time a target hits, it moves above your entry price, converting paper gains into a guaranteed floor.</p>
+</section>
+
+<section id="history">
+  <h2 class="serif">History &amp; Positions</h2>
+  <p><b>📊 Positions</b> shows every token you hold with live value, the price you paid, and profit or loss — with one-tap sell.</p>
+  <p><b>🕘 History</b> (in the Trade Center) lists your last trades, one line each: amount in SOL and USD at the moment of the trade, a 🧠 mark when it was part of a Smart Trade, and a link to the transaction on Solscan.</p>
+</section>
+
+<section id="fees">
+  <h2 class="serif">Fees</h2>
+  <p>Venus charges <b>0.9% per swap</b>, already included in every buy and sell — nothing is charged separately, ever. The only other costs are Solana's own network fees (fractions of a cent) and the priority fee you configure yourself.</p>
+</section>
+
+<section id="referrals">
+  <h2 class="serif">Referrals</h2>
+  <p>Share your personal invite link from the 👥 Referrals screen. When friends join and trade:</p>
+  <ul>
+    <li><b>5 referrals</b> → 10% off your trading fee, forever.</li>
+    <li><b>10 referrals</b> → 20% off, forever.</li>
+  </ul>
+</section>
+
+<section id="wallet">
+  <h2 class="serif">Wallet &amp; security</h2>
+  <ul>
+    <li><b>Your keys, exportable.</b> Venus creates the wallet for you and stores its private key encrypted. You can export it at any moment and import it into Phantom or any Solana wallet — the wallet is yours, not ours.</li>
+    <li><b>Encrypted at rest.</b> Private keys are never stored as plain text: they are protected with AES encryption with built-in tamper detection, restricted file access, and rotating backups against data loss.</li>
+    <li><b>Up to 3 wallets</b>, one active at a time. Deleting or exporting always asks for confirmation.</li>
+    <li><b>Withdraw anytime.</b> Send your SOL to any Solana address, with a confirmation step and a receipt.</li>
+    <li><b>Private by design.</b> Venus only works in one-on-one chats. Your balances, positions and history are visible to you alone.</li>
+  </ul>
+  <div class="callout"><span class="ic">🚨</span><div><b>The three rules that beat every scam:</b> Venus never messages first. Venus never asks for your keys. Venus never asks you to send funds anywhere to "verify" or "unlock" something. And the only official accounts are the bot <code>@venus_smart_tradingbot</code> and <a href="https://x.com/VenusSolanaBot">@VenusSolanaBot</a> on X — anything else using the name is an impostor.</div></div>
+</section>
+
+<section id="faq">
+  <h2 class="serif">FAQ</h2>
+  <details class="qa"><summary>A token's value shows "unavailable" — is my money gone?</summary><div>No. It means the live price could not be fetched at that moment (usually a busy price service). Your tokens are untouched — tap Refresh and the value comes back.</div></details>
+  <details class="qa"><summary>What happens to my Smart Trade if the price service goes down?</summary><div>Venus tells you clearly that monitoring is delayed, keeps your position untouched (it never sells blind), retries continuously, and resumes on its own — with a message — when data returns.</div></details>
+  <details class="qa"><summary>What happens if the bot restarts?</summary><div>Nothing is lost. Positions, wallets, settings and running Smart Trades are saved continuously; a Smart Trade resumes monitoring automatically after any restart.</div></details>
+  <details class="qa"><summary>I hold a token that cannot be sold. Why?</summary><div>Some tokens lose all their market liquidity ("rugged") — there is no route to sell them, on any platform. Use 🙈 Hide / show tokens to remove them from your lists, and 🧹 Clean up wallet to reclaim the small SOL deposits locked by empty token accounts.</div></details>
+  <details class="qa"><summary>Why do I see a small SOL deposit "locked" per token?</summary><div>On Solana, every token you hold needs its own small account, which keeps about 0.002 SOL as a deposit while it exists. When you fully sell a token, 🧹 Clean up wallet closes the empty account and returns that SOL to you.</div></details>
+  <details class="qa"><summary>Is Venus financial advice?</summary><div>No. Meme tokens are extremely risky and can go to zero. Venus executes your decisions and protects you from avoidable mistakes — it does not predict markets. Trade only what you can afford to lose.</div></details>
+
+  <h3>Questions &amp; queries</h3>
+  <p>Anything unclear, or something not working? Write to <a href="mailto:venussmartbot@protonmail.com"><code>venussmartbot@protonmail.com</code></a>.</p>
+</section>
+
+<footer class="bottom">
+  <p><span class="serif">◈ Venus</span> · Solana Smart Trading Bot · <a href="https://t.me/venus_smart_tradingbot"><code>@venus_smart_tradingbot</code></a> · <a href="https://x.com/VenusSolanaBot">X: @VenusSolanaBot</a> · <a href="mailto:venussmartbot@protonmail.com">venussmartbot@protonmail.com</a></p>
+  <p>Community links are coming soon. Trading meme tokens involves substantial risk of loss. Nothing here is financial advice.</p>
+</footer>
+</main>
+</div>
+</body>
+</html>
